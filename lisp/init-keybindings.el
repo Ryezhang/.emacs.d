@@ -1,8 +1,13 @@
 ;;
 ;;
+;; 打开init.el文件;
+(global-set-key (kbd "C-c 1") 'open-my-init-file)
 
-;; 将 C-w 来使其可以向后删除一个单词
-(global-set-key (kbd "C-w") 'backward-kill-word)
+;; 打开最近打开的文件列表;
+(global-set-key "\C-x\ \C-r" 'recentf-open-files)
+
+;; 跳转行号;
+(global-set-key (kbd "C-x j") 'goto-line)
 
 ;; iedit 是一个可以同时编辑多个区域的插件，它类似 Sublime Text 中的多光标编辑
 ;; 我们将其绑定快捷键以便更快捷的使用这个模式（ C-; 为默认快捷键）
@@ -14,6 +19,19 @@
 ;; Company 有时候补全功能并不是非常理想，这时就可以使用 Hippie Expand 来完成补全
 (global-set-key (kbd "s-/") 'hippie-expand)
 
+;; 跳转到function/variable/function-key定义文件;
+(global-set-key (kbd "C-h C-f") 'find-function)
+(global-set-key (kbd "C-h C-v") 'find-variable)
+(global-set-key (kbd "C-h C-k") 'find-function-on-key)
+
+;; swiper ivy绑定键
+(global-set-key "\C-s" 'swiper)
+;;(global-set-key (kbd "C-c C-r") 'ivy-resume)
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "C-h f") 'counsel-describe-function)
+(global-set-key (kbd "C-h v") 'counsel-describe-variable)
+(global-set-key (kbd "C-c p f") 'counsel-git)
 
 
 (provide 'init-keybindings)

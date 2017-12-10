@@ -1,17 +1,16 @@
-;; Emacs 插件包管理
-
-(require 'package) ;; You might already have this line
-(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-                    (not (gnutls-available-p))))
-       (url (concat (if no-ssl "http" "https") "://melpa.org/packages/")))
-  (add-to-list 'package-archives (cons "melpa" url) t))
-(when (< emacs-major-version 24)
-  ;; For important compatibility libraries like cl-lib
-  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
-(package-initialize) ;; You might already have this line
-
 ;; cl - Common Lisp Extension
 (require 'cl)
+
+;; (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+;;                     (not (gnutls-available-p))))
+;;        (url (concat (if no-ssl "http" "https") "://stable.melpa.org/packages/")))
+;;   (add-to-list 'package-archives (cons "melpa" url) t))
+(when (>= emacs-major-version 24)
+  ;; For important compatibility libraries like cl-lib
+  ;;(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
+  (require 'package) ;; You might already have this line
+  ;;(package-initialize) ;; You might already have this line
+  (add-to-list 'package-archives (cons "stable-melpa" "http://elpa.emacs-china.org/melpa-stable/") t))
 
 ;; Add Packages
 (defvar my/packages '(
@@ -19,14 +18,17 @@
 		      company
 		      ;; --- Better Editor ---
 		      hungry-delete
+		      ;;smex
 		      swiper
 		      counsel
 		      smartparens
 		      ;; --- Major Mode ---
 		      js2-mode
+		      lua-mode
 		      ;; --- Minor Mode ---
 		      ;; nodejs-repl
-		      ;; exec-path-from-shell
+		      exec-path-from-shell
+		      popwin
 		      ;; --- Themes ---
 		      monokai-theme
 		      solarized-theme
@@ -35,7 +37,6 @@
 		      evil
 		      org-pomodoro
 		      pallet
-		      lua-mode
 		      ) "Default packages")
 
 (setq package-selected-packages my/packages)
@@ -52,8 +53,19 @@
     (when (not (package-installed-p pkg))
       (package-install pkg))))
 
-;; Find Executable Path On OS X
-;; (when (memq window-systom '(mac ns))
+(setq auto-mode-alist
+      (append
+       ;; File name (within directory) starts with a dot.
+       '(("/\\.[^/]*\\'" . fundamental-mode)
+	 ;; File name has no dot.
+	 ("/[^\\./]*\\'" . fundamental-mode)
+	 ;; File name ends in ‘.C’.
+	 ("\\.C\\'" . c++-mode)
+	 ("\\.js\\'". js2-mode))
+       auto-mode-alist))
+
+;; let emacs could find executable on OSX
+;; (when (memq systom-type '(mac ns))
 ;;  (exec-path-from-shell-intialize))
 
 ;; 使用company-mode
@@ -73,21 +85,18 @@
 ;; This is your old M-x.
 ;; (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
-;; 开启ivy
+;; 开启swiper ivy
 (ivy-mode 1)
+(setq ivy-use-virtual-buffers t)
+(setq enable-recursive-minibuffers t)
 
-;; ivy绑定键
-(global-set-key (kbd "C-s") 'swiper)
-(global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "C-x C-f") 'counsel-find-file)
-(global-set-key (kbd "<f1> f") 'counsel-describe-function)
-(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-(global-set-key (kbd "<f1> l") 'counsel-find-library)
-(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+;; 开启smartparens
+(smartparens-global-mode t)
+;; (add-hook 'emacs-lisp-mode-hook 'smartparens-mode)
 
-;; 开启Smartparens
-(require 'smartparens-config)
+;; 开启popwin;
+(require 'popwin)
+(popwin-mode 1)
 
 ;; 开启iedit
 (require 'iedit)
@@ -119,7 +128,7 @@
 (rtags-diagnostics)
 (setq rtags-completions-enabled t)
 (push 'company-rtags company-backends)
-(global-company-mode)
+(global-company-mode t)
 (define-key c-mode-base-map (kbd "<C-tab>") (function company-complete))
 
 ;; turn on rtags flycheck;

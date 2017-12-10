@@ -1,42 +1,41 @@
 ;;
 ;;
-;; 关闭文件滑动控件
-(scroll-bar-mode -1)
-
-;; 关闭工具栏，tool-bar-mode 即为一个 Minor Mode
-(tool-bar-mode -1)
-
-;;
-(electric-indent-mode -1)
-
-;;
-(defun open-my-init-file ()
-  (interactive)
-  (find-file "~/.emacs.d/init.el"))
-
-;;
-(global-set-key (kbd "C-x C-1") 'open-my-init-file)
-
-;; 关闭启动帮助画面
-(setq inhibit-splash-screen 1)
-
-;; 显示行号
-(global-linum-mode 1)
-
-;; 高亮当前行
-(global-hl-line-mode 1)
-
-;;将Emacs设置为开启默认全屏
-(setq initial-frame-alist (quote ((fullscreen . maximized))))
+;; 关闭Emacs中的警告音
+(setq ring-bell-function 'ignore)
 
 ;; 禁止Emacs自动生成备份文件 如init.el~
 (setq make-backup-files nil)
+
+;; 关闭Emacs自动保存文件
+(setq auto-save-default nil)
+
+;; 自动加载外部修改过的文件
+(global-auto-revert-mode t)
+
+;; 启用最近打开文件list;
+(require 'recentf)
+(recentf-mode t)
+(setq recentf-max-menu-items 25)
+
+;; 开启缩写替换;
+(abbrev-mode t)
+(define-abbrev-table 'global-abbrev-table '(
+					    ("XxX" "MyName")
+					    ("XXxx" "MMMM")
+					    ))
+
+;; 输入 (y or n)
+(fset 'yes-or-no-p 'y-or-n-p)
 
 ;; 选中一段文字之后输入一个字符会替换掉你选中部分的文字
 (delete-selection-mode 1)
 
 ;; 启用自动括号匹配
 (add-hook 'emacs-lisp-mode-hook 'show-paren-mode)
+;;(add-hook 'emacs-lisp-mode-hook 'linum-mode)
+
+;; 开启全局行号
+(global-linum-mode 1)
 
 ;; 设置Emacs递归删除
 (setq dired-recursive-deletes 'always)
@@ -60,5 +59,6 @@
 
 ;; 使当一个窗口（frame）中存在两个分屏 （window）时，将另一个分屏自动设置成拷贝地址的目标;
 (setq dired-dwin-target 1)
+
 
 (provide 'init-better-defaults)

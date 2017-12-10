@@ -1,34 +1,21 @@
 ;;
 ;;
-;;
-
-;; Emacs自动加载外部修改过的文件
-(global-auto-revert-mode 1)
-
-;; 关闭Emacs自动保存文件
-(setq auto-save-default nil)
-
-;; 关闭Emacs中的警告音
-(setq ring-bell-function 'ignore)
-
-
-;; 输入 (y or n)
-(fset 'yes-or-no-p 'y-or-n-p)
-
-;; 
-(setq auto-mode-alist
-      (append
-       ;; File name (within directory) starts with a dot.
-       '(("/\\.[^/]*\\'" . fundamental-mode)
-	 ;; File name has no dot.
-	 ("/[^\\./]*\\'" . fundamental-mode)
-	 ;; File name ends in ‘.C’.
-	 ("\\.C\\'" . c++-mode)
-	 ("\\.js\\'". js2-mode))
-       auto-mode-alist))
-
-;; 
-(global-set-key (kbd "C-x j") 'goto-line)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(company-idle-delay 0.08)
+ '(company-minimum-prefix-length 1)
+ '(package-selected-packages
+   (quote
+    (package-build shut-up epl git commander f dash s company hungry-delete swiper counsel smartparens js2-mode monokai-theme solarized-theme iedit expand-region evil org-pomodoro pallet))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(highlight ((t (:background "Magenta")))))
 
 ;; 配置 Occur Mode 使其默认搜索当前被选中的或者在光标下的字符串
 (defun occur-dwim ()
@@ -160,4 +147,4 @@
 (add-hook 'c++-mode-hook 'rtags-start-process-unless-running)
 (add-hook 'objc-mode-hook 'rtags-start-process-unless-running)
 
-(provide 'custome)
+(provide 'custom)
