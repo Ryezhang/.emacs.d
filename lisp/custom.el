@@ -7,30 +7,17 @@
  ;; If there is more than one, they won't work right.
  '(company-idle-delay 0.08)
  '(company-minimum-prefix-length 1)
+ '(evil-leader/leader "SPC")
+ '(evil-want-C-u-scroll t)
  '(package-selected-packages
    (quote
-    (package-build shut-up epl git commander f dash s company hungry-delete swiper counsel smartparens js2-mode monokai-theme solarized-theme iedit expand-region evil org-pomodoro pallet))))
+    (company-anaconda use-package evil-leader exec-path-from-shell lua-mode mwe-log-commands popwin powerline-evil reveal-in-osx-finder undo-tree window-numbering pallet package-build shut-up epl git commander f dash s company hungry-delete swiper counsel smartparens js2-mode monokai-theme solarized-theme iedit expand-region evil org-pomodoro))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(highlight ((t (:background "Magenta")))))
-
-;; 配置 Occur Mode 使其默认搜索当前被选中的或者在光标下的字符串
-(defun occur-dwim ()
-  "Call `occur' with a sane default."
-  (interactive)
-  (push (if (region-active-p)
-            (buffer-substring-no-properties
-             (region-beginning)
-             (region-end))
-          (let ((sym (thing-at-point 'symbol)))
-            (when (stringp sym)
-              (regexp-quote sym))))
-        regexp-history)
-  (call-interactively 'occur))
-(global-set-key (kbd "M-s o") 'occur-dwim)
 
 (defun js2-imenu-make-index ()
   (interactive)
@@ -58,48 +45,6 @@
       '(("t" "Todo" entry (file+headline "~/.emacs.d/gtd.org" "工作安排")
          "* TODO [#B] %?\n  %i\n"
          :empty-lines 1)))
-
-
-(defun indent-buffer()
-  (interactive)
-  (indent-region (point-min) (point-max)))
-
-;; indent-region 可以帮我们重新缩进所选区域的代码，但是每一次都选中十分麻烦。
-;; 使用下面的代码可以一次重新缩进全部缓冲区的代码
-(defun indent-region-or-buffer()
-  (interactive)
-  (save-excursion
-    (if (region-active-p)
-        (progn
-          (indent-region (region-beginning) (region-end))
-          (message "Indent selected region."))
-      (progn
-        (indent-buffer)
-        (message "Indent buffer.")))))
-
-;; 增强 Hippie Expand 的功能
-(setq hippie-expand-try-function-list '(try-expand-debbrev
-                                        try-expand-debbrev-all-buffers
-                                        try-expand-debbrev-from-kill
-                                        try-complete-file-name-partially
-                                        try-complete-file-name
-                                        try-expand-all-abbrevs
-                                        try-expand-list
-                                        try-expand-line
-                                        try-complete-lisp-symbol-partially
-                                        try-complete-lisp-symbol))
-
-;; 在 Emacs Lisp 中'不作补全
-(sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
-(sp-local-pair 'lisp-interaction-mode "'" nil :actions nil)
-
-;; show-paren-mode 可以使鼠标在括号上是高亮其所匹配的另一半括号，然而我们想要光标 在括号内时就高亮包含内容的两个括号，使用下面的代码就可以做到这一点;
-(define-advice show-paren-function (:around (fn) fix-show-paren-function)
-  "Highlight enclosing parens."
-  (cond ((looking-at-p "\\s(") (funcall fn))
-        (t (save-excursion
-             (ignore-errors (backward-up-list))
-             (funcall fn)))))
 
 ;; 在不同系统中的换行符，例如在 DOS 系统下的 \r(^M) 换行符， 这让我们有时候在 Unix 系统中很是头疼，因为它的存在会使版本控制误以为整行的代码都 被修改过而造成不必要的麻烦;
 ;; 隐藏这个换行符
